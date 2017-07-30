@@ -9,8 +9,8 @@ namespace ParkingGame
         //[ExecuteInEditMode]
         public class AnimationsToolSettings : MonoBehaviour
         {
-            public bool positionIsLerping = false;
-            public bool positionAnimationsEnabled = false;
+            public bool positionIsLerping;
+            public bool positionAnimationsEnabled;
             public int PositionSteps
             {
                 get
@@ -50,22 +50,19 @@ namespace ParkingGame
 
             private void Start()
             {
-				positionMode = PosMode.Continuous;
-                Debug.Log("Start");
+				//positionMode = PosMode.Continuous;
                 StartCoroutine("PositionAnimationsCor");
-
-
             }
 
             IEnumerator PositionAnimationsCor()
             {
-                int step;
                 float xTemp, yTemp, zTemp;
 
                 if (positionIsLerping)
                 {
                     switch (positionMode)
                     {
+                        #region
                         case PosMode.StartEndStart:
                             for (int i = 0; i < positionVectors.Length-1; i++)
                             {
@@ -79,30 +76,60 @@ namespace ParkingGame
 									yTemp = Mathf.SmoothStep(positionVectors[i].y, positionVectors[i + 1].y, posLerpProgress);
 									zTemp = Mathf.SmoothStep(positionVectors[i].z, positionVectors[i + 1].z, posLerpProgress);
                                 	gameObject.transform.position = new Vector3(xTemp, yTemp, zTemp);
+                                    if (positionIsLerping != true) break;
 								}
                             }
+                            for (int i = positionVectors.Length - 1; i > 0; i--)
+                            {
+                                posLerpStartTime = Time.time;
+                                posLerpProgress = 0;
+                                while (posLerpProgress < 1)
+                                {
+                                    yield return new WaitForEndOfFrame();
+                                    posLerpProgress = (Time.time - posLerpStartTime) / positionSpeed;
+                                    xTemp = Mathf.SmoothStep(positionVectors[i].x, positionVectors[i - 1].x, posLerpProgress);
+                                    yTemp = Mathf.SmoothStep(positionVectors[i].y, positionVectors[i - 1].y, posLerpProgress);
+                                    zTemp = Mathf.SmoothStep(positionVectors[i].z, positionVectors[i - 1].z, posLerpProgress);
+                                    gameObject.transform.position = new Vector3(xTemp, yTemp, zTemp);
+                                    if (positionIsLerping != true) break;
+                                }
+                            }
                             break;
+                        #endregion
 
+                        #region
                         case PosMode.Continuous:
-							posLerpStartTime = Time.time;
-							posLerpProgress = 0;
+                            Vector3 normalizedDirection = (positionVectors[1] - positionVectors[0]).normalized;
+                            transform.position = positionVectors[0];
 							while (positionIsLerping)
 							{
 								yield return new WaitForEndOfFrame();
-								//posLerpProgress = (Time.time - posLerpStartTime) / positionSpeed;
-							xTemp = Mathf.Lerp(positionVectors[0].x, positionVectors[1].x, posLerpProgress);
-							yTemp = Mathf.Lerp(positionVectors[0].y, positionVectors[1].y, posLerpProgress);
-							zTemp = Mathf.Lerp(positionVectors[0].z, positionVectors[1].z, posLerpProgress);
-								gameObject.transform.position = new Vector3(xTemp, yTemp, zTemp);
+                                transform.position += normalizedDirection * positionSpeed * Time.deltaTime;
 							}
                             break;
+#endregion
 
+                        #region
                         case PosMode.StartEnd:
-
+                            for (int i = 0; i < positionVectors.Length - 1; i++)
+                            {
+                                posLerpStartTime = Time.time;
+                                posLerpProgress = 0;
+                                while (posLerpProgress < 1)
+                                {
+                                    yield return new WaitForEndOfFrame();
+                                    posLerpProgress = (Time.time - posLerpStartTime) / positionSpeed;
+                                    xTemp = Mathf.SmoothStep(positionVectors[i].x, positionVectors[i + 1].x, posLerpProgress);
+                                    yTemp = Mathf.SmoothStep(positionVectors[i].y, positionVectors[i + 1].y, posLerpProgress);
+                                    zTemp = Mathf.SmoothStep(positionVectors[i].z, positionVectors[i + 1].z, posLerpProgress);
+                                    gameObject.transform.position = new Vector3(xTemp, yTemp, zTemp);
+                                    if (positionIsLerping != true) break;
+                                }
+                            }
                             break;
+                            #endregion
                     }
                 }
-				Debug.Log("gg");
                 yield return null;
             }
 

@@ -8,46 +8,81 @@ namespace ParkingGame
 
     namespace AnimationTool
     {
-        /*
+
+
         [CustomEditor(typeof(AnimationsToolSettings))]
         [CanEditMultipleObjects]
         public class AnimationsToolCustomEditor : Editor
         {
-            AnimationsToolSettings animSettings;
-            SerializedObject animSettingsSO;
-            SerializedProperty calculatePosition;
-            int positionsSteps;
-
-            SerializedObject test;
+            private AnimationsToolSettings animToolSettings;
 
             private void OnEnable()
             {
-                if (animSettings != target)
-                    animSettings = target as AnimationsToolSettings;
-                animSettingsSO = new SerializedObject(targets);
-                calculatePosition = animSettingsSO.FindProperty("calculatePosition");
+                InitData();
             }
 
-            public override void OnInspectorGUI()
+            public void InitData()
             {
-                //AnimationsToolSettings animSettings = (AnimationsToolSettings)target;
-                //calculatePosition = EditorGUILayout.BeginToggleGroup("Animate position", calculatePosition);
-                //EditorGUILayout.IntField("Animations steps", positionsSteps);
-                //EditorGUILayout.EndToggleGroup();
 
-                PositionAnimations();
-
-                serializedObject.ApplyModifiedProperties();
             }
+        }
 
-            private void PositionAnimations()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            /*
+            [CustomEditor(typeof(AnimationsToolSettings))]
+            [CanEditMultipleObjects]
+            public class AnimationsToolCustomEditor : Editor
             {
-                EditorGUILayout.PropertyField(calculatePosition);
-                if (calculatePosition.boolValue)
+                AnimationsToolSettings animSettings;
+                SerializedObject animSettingsSO;
+                SerializedProperty calculatePosition;
+                int positionsSteps;
+
+                SerializedObject test;
+
+                private void OnEnable()
                 {
-                    EditorGUILayout.IntField("Animation steps", positionsSteps);
+                    if (animSettings != target)
+                        animSettings = target as AnimationsToolSettings;
+                    animSettingsSO = new SerializedObject(targets);
+                    calculatePosition = animSettingsSO.FindProperty("calculatePosition");
                 }
-            }
-        }*/
-    }
+
+                public override void OnInspectorGUI()
+                {
+                    //AnimationsToolSettings animSettings = (AnimationsToolSettings)target;
+                    //calculatePosition = EditorGUILayout.BeginToggleGroup("Animate position", calculatePosition);
+                    //EditorGUILayout.IntField("Animations steps", positionsSteps);
+                    //EditorGUILayout.EndToggleGroup();
+
+                    PositionAnimations();
+
+                    serializedObject.ApplyModifiedProperties();
+                }
+
+                private void PositionAnimations()
+                {
+                    EditorGUILayout.PropertyField(calculatePosition);
+                    if (calculatePosition.boolValue)
+                    {
+                        EditorGUILayout.IntField("Animation steps", positionsSteps);
+                    }
+                }
+            }*/
+        }
 }
